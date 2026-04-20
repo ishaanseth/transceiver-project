@@ -7,7 +7,4 @@ __pycache__/
 *.pyc
 
 # Ignore audio and image data (keep it local!)
-data/*.wav
-data/*.png
-data/*.jpg
 !data/.gitkeep
