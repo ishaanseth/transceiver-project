@@ -35,7 +35,7 @@ def map_bits_to_symbols(bit_array, M=4,METHOD="QAM"):
     #else PAM
 
 
-def pulse_shape_symbols(symbols, samples_per_symbol, METHOD="SQUARE"):
+def pulse_shape_symbols(symbols, samples_per_symbol, METHOD="SINC"):
     
     if METHOD == "SQUARE":
         return np.repeat(symbols, samples_per_symbol)
