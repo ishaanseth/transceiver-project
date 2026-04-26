@@ -1,5 +1,45 @@
+from pathlib import Path
+
 import numpy as np
 import matplotlib.pyplot as plt
+
+
+DEFAULT_PLOTS_DIR = Path(__file__).resolve().parents[1] / "data" / "plots"
+
+
+def save_important_plot(filename, fig=None, plots_dir=DEFAULT_PLOTS_DIR, dpi=300, **savefig_kwargs):
+    """Save a selected plot to data/plots for report-ready figures.
+
+    Parameters
+    ----------
+    filename : str or pathlib.Path
+        Output file name. If no extension is provided, ".png" is used.
+    fig : matplotlib.figure.Figure, optional
+        Figure to save. Defaults to the current active matplotlib figure.
+    plots_dir : str or pathlib.Path, optional
+        Destination folder. Defaults to the project's data/plots folder.
+    dpi : int, optional
+        Resolution for raster outputs.
+    **savefig_kwargs
+        Extra keyword arguments passed to matplotlib's savefig.
+    """
+    fig = fig or plt.gcf()
+    plots_dir = Path(plots_dir)
+    output_path = Path(filename)
+
+    if output_path.suffix == "":
+        output_path = output_path.with_suffix(".png")
+
+    if not output_path.is_absolute():
+        output_path = plots_dir / output_path
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    savefig_options = {"bbox_inches": "tight", "dpi": dpi}
+    savefig_options.update(savefig_kwargs)
+    fig.savefig(output_path, **savefig_options)
+
+    return output_path
 
 
 def plot_complex_parts(signal, title_prefix="Signal"):
