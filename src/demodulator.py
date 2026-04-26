@@ -59,4 +59,5 @@ def locate_pilot_start(sync_start_idx, sync_length, fs, gap_seconds=0.05):
 def slice_pilot_samples(rx_baseband, pilot_start_idx, num_pilot_symbols, samples_per_symbol):
     """Slice received baseband samples covering the known pilot symbols."""
     num_samples = num_pilot_symbols * samples_per_symbol
-    return rx_baseband[pilot_start_idx:pilot_start_idx + num_samples]
+    # return rx_baseband[pilot_start_idx:pilot_start_idx + num_samples]
+    return rx_baseband      
