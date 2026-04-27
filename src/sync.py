@@ -25,7 +25,6 @@ def make_silence(duration_seconds, fs, dtype=complex):
 
 def assemble_baseband_frame(
     sync_audio,
-    pilot_signal,
     payload_signal,
     fs,
     start_silence=5.0,
@@ -41,7 +40,6 @@ def assemble_baseband_frame(
         silence_gap_start,
         sync_audio,
         silence_gap_middle,
-        pilot_signal,
         payload_signal,
         silence_gap_end,
     ])

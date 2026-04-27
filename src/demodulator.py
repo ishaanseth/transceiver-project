@@ -83,3 +83,17 @@ def slice_pilot_samples(rx_baseband, pilot_start_idx, num_pilot_symbols, samples
     """Slice received baseband samples covering the known pilot symbols."""
     num_samples = (num_pilot_symbols +4)* samples_per_symbol
     return rx_baseband[pilot_start_idx:pilot_start_idx + num_samples]   
+
+def downsample_from_offset(rx_baseband, start, samples_per_symbol):
+    """Downsample entire signal using detected timing offset."""
+    
+    L = samples_per_symbol
+    
+    # Downsample
+    downsampled = rx_baseband[start::L]
+    
+    # Sparse version (like your ds_xt)
+    ds_signal = np.zeros_like(rx_baseband, dtype=complex)
+    ds_signal[start::L] = rx_baseband[start::L]
+    
+    return downsampled, ds_signal

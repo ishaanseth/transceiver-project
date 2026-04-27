@@ -24,3 +24,6 @@ flag=True
 
 #gap between zadoff and pilots
 SYNC_GAP_SECONDS=0
+
+#SPAN for the sinc symbols 
+SPAN=4

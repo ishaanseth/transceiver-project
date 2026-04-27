@@ -62,7 +62,7 @@ def pulse_shape_symbols(symbols, samples_per_symbol, METHOD="SINC"):
             baseband_signal[start:end] += symbols[i] * sinc_base
         
         # REMOVE DELAY 
-        #baseband_signal = baseband_signal[SPAN*L -3: SPAN*L + N*L]
+        #baseband_signal = baseband_signal[SPAN*L : SPAN*L + N*L]
         
         return baseband_signal
         
