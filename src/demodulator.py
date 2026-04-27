@@ -34,8 +34,31 @@ def lowpass_filter(signal, fs, cutoff_hz, order=5):
     return filtfilt(b, a, signal)
 
 
+def estimate_baseband_bandwidth(symbol_rate, pulse_method="SINC", rolloff=0.0, margin=1.0):
+    """Estimate the baseband bandwidth required for pulse-shaped symbols.
+
+    For a rectangular/square pulse, the first null occurs at the symbol rate.
+    For a sinc pulse, the ideal baseband bandwidth is approximately half the
+    symbol rate. This helper provides an approximate lowpass cutoff that
+    preserves the signal's occupied bandwidth.
+    """
+    pulse_method = pulse_method.upper()
+    if pulse_method == "SINC":
+        baseband_bw = 0.5 * symbol_rate
+    elif pulse_method == "SQUARE":
+        baseband_bw = symbol_rate
+    else:
+        baseband_bw = symbol_rate * (1 + rolloff)
+
+    return baseband_bw * margin
+
+
 def downconvert_to_baseband(rx_audio, fs, carrier_freq, cutoff_hz, filter_order=5):
-    """Downconvert passband audio into filtered complex baseband samples."""
+    """Downconvert passband audio into filtered complex baseband samples.
+
+    The cutoff_hz should be chosen to match the expected occupied bandwidth of
+    the transmitted waveform after pulse shaping, not merely the symbol rate.
+    """
     i_mixed, q_mixed = mix_down_to_iq(rx_audio, fs, carrier_freq)
     i_baseband = lowpass_filter(i_mixed, fs, cutoff_hz, order=filter_order)
     q_baseband = lowpass_filter(q_mixed, fs, cutoff_hz, order=filter_order)
