@@ -17,7 +17,7 @@ def hamming74_encode(bits):
         p2 = (d1 + d3 + d4) % 2
         p3 = (d2 + d3 + d4) % 2
 
-        # ترتیب: [p1 p2 d1 p3 d2 d3 d4]
+        # Order: [p1 p2 d1 p3 d2 d3 d4]
         encoded.extend([p1, p2, d1, p3, d2, d3, d4])
 
     return np.array(encoded)
