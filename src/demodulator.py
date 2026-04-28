@@ -9,7 +9,7 @@ def load_mono_normalized_audio(filepath):
 
     if len(audio.shape) > 1:
         audio = audio.mean(axis=1)
-
+    
     audio = audio.astype(float)
     peak = np.max(np.abs(audio))
     if peak > 0:
