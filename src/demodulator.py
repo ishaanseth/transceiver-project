@@ -97,3 +97,40 @@ def downsample_from_offset(rx_baseband, start, samples_per_symbol):
     ds_signal[start::L] = rx_baseband[start::L]
     
     return downsampled, ds_signal
+
+def symbols_to_bits(symbols, M=4, METHOD="QAM"):
+    
+    if METHOD == "QAM":
+        symbols = np.asarray(symbols)
+        
+        k = int(np.log2(M))
+        k_half = k // 2
+        L = int(np.sqrt(M))
+        
+        # Same normalization used in TX
+        norm_factor = np.sqrt((2 / 3) * (M - 1))
+        
+        # Denormalize
+        symbols = symbols * norm_factor
+        
+        bits_out = []
+        
+        for s in symbols:
+            i_val = np.real(s)
+            q_val = np.imag(s)
+            
+            # Find nearest level index
+            i_idx = int(np.round((i_val + (L - 1)) / 2))
+            q_idx = int(np.round((q_val + (L - 1)) / 2))
+            
+            # Clip (important for noise robustness)
+            i_idx = np.clip(i_idx, 0, L - 1)
+            q_idx = np.clip(q_idx, 0, L - 1)
+            
+            # Convert to bits
+            i_bits = list(map(int, format(i_idx, f'0{k_half}b')))
+            q_bits = list(map(int, format(q_idx, f'0{k_half}b')))
+            
+            bits_out.extend(i_bits + q_bits)
+        
+        return np.array(bits_out)
