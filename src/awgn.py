@@ -1,22 +1,18 @@
 import numpy as np
 
-def add_awgn(signal, variance):
-    """
-    Adds AWGN noise to a signal.
-
-    Parameters:
-    signal (array-like): Input signal
-    variance (float): Noise variance (sigma^2)
-
-    Returns:
-    noisy_signal (numpy array): Signal with added AWGN
-    """
+def add_awgn_snr(signal, snr_db):
     signal = np.array(signal)
 
-    # Generate noise with mean 0 and given variance
-    noise = np.random.normal(0, np.sqrt(variance), size=signal.shape)
+    # Signal power
+    signal_power = np.mean(signal**2)
 
-    # Add noise to signal
-    noisy_signal = signal + noise
+    # Convert SNR to linear
+    snr_linear = 10**(snr_db / 10)
 
-    return noisy_signal
+    # Compute noise variance
+    noise_variance = signal_power / snr_linear
+
+    # Generate noise
+    noise = np.random.normal(0, np.sqrt(noise_variance), signal.shape)
+
+    return signal + noise
