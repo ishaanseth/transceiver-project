@@ -1,3 +1,4 @@
+import numpy as np
 FS = 44100            # Sample rate (Hz)
 F_CARRIER = 10000  
 SYMBOL_RATE = 6300  # Symbols per second (Baud)
@@ -27,3 +28,9 @@ SYNC_GAP_SECONDS=0
 
 #SPAN for the sinc symbols 
 SPAN=4
+
+NUM_PILOTS = 32
+
+bit_string = "1001001001101000110101010010011111011000001110111010010111111001"
+
+pilot_bits = np.array([int(b) for b in bit_string[:NUM_PILOTS]])
