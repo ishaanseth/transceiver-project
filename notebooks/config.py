@@ -1,7 +1,7 @@
 import numpy as np
 FS = 44100            # Sample rate (Hz)
 F_CARRIER = 10000  
-SYMBOL_RATE = 100  # Symbols per second (Baud)
+SYMBOL_RATE = 6300  # Symbols per second (Baud)
 
 # Calculate how many audio samples represent one symbol
 # 44100 Hz / 8820 Baud = 5 samples per symbol
