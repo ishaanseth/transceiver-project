@@ -17,7 +17,7 @@ len_zadoff_chu = 353
 u_zadoff_chu = 7
 
 #METHODS
-pulse_method="SINC" # "SQUARE" or "SINC"
+pulse_method="RRC" # "SQUARE" or "SINC" or "RRC"
 modulation_method="QAM" # "QAM" or "PAM"
 
 #do i want to read or write to the message.txt file, true to read 

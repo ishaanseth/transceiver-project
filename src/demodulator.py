@@ -73,6 +73,89 @@ def matched_filter_sync(rx_baseband, reference_sequence):
     return sync_start_idx, corr
 
 
+
+
+
+def matched_filter_sync_new(rx_baseband, reference_sequence, pulse_shape, sps):
+    """
+    Matched filter sync that internally handles pulse shape strings.
+    
+    pulse_shape: "SQUARE", "SINC", or "RRC"
+    sps: samples per symbol
+    """
+
+    # Ensure 1D
+    rx_baseband = np.asarray(rx_baseband).flatten()
+    reference_sequence = np.asarray(reference_sequence).flatten()
+
+    # -----------------------------
+    # Generate pulse shape filter
+    # -----------------------------
+    if pulse_shape == "SQUARE":
+        h = np.ones(sps)
+
+    elif pulse_shape == "SINC":
+        SPAN = 4
+        t = np.arange(-SPAN*sps, SPAN*sps + 1) / sps
+        h = np.sinc(t)
+
+    elif pulse_shape == "RRC":
+        beta = 0.25
+        SPAN = 6
+        t = np.arange(-SPAN*sps, SPAN*sps + 1) / sps
+        
+        h = np.zeros_like(t)
+
+        for i in range(len(t)):
+            ti = t[i]
+
+            if ti == 0.0:
+                h[i] = 1.0 - beta + (4 * beta / np.pi)
+
+            elif abs(ti) == 1 / (4 * beta):
+                h[i] = (beta / np.sqrt(2)) * (
+                    (1 + 2/np.pi) * np.sin(np.pi / (4 * beta)) +
+                    (1 - 2/np.pi) * np.cos(np.pi / (4 * beta))
+                )
+
+            else:
+                numerator = (
+                    np.sin(np.pi * ti * (1 - beta)) +
+                    4 * beta * ti * np.cos(np.pi * ti * (1 + beta))
+                )
+                denominator = (
+                    np.pi * ti * (1 - (4 * beta * ti)**2)
+                )
+                h[i] = numerator / denominator
+
+        # Normalize
+        h = h / np.sqrt(np.sum(h**2))
+
+    else:
+        raise ValueError("Invalid pulse shape")
+
+    # -----------------------------
+    # Apply pulse shaping to reference
+    # -----------------------------
+    ref_shaped = fftconvolve(reference_sequence, h, mode="full")
+
+    # -----------------------------
+    # Matched filter
+    # -----------------------------
+    matched_filter = ref_shaped[::-1].conj()
+
+    corr = np.abs(fftconvolve(rx_baseband, matched_filter, mode="valid"))
+
+    sync_start_idx = int(np.argmax(corr))
+
+    return sync_start_idx, corr
+
+
+
+
+
+
+
 def locate_pilot_start(sync_start_idx, sync_length, fs, gap_seconds=0.05):
     """Calculate where pilot symbols begin after the sync preamble and gap."""
     gap_samples = int(fs * gap_seconds)

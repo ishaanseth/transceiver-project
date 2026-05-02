@@ -61,14 +61,60 @@ def pulse_shape_symbols(symbols, samples_per_symbol, METHOD="SINC"):
             
             baseband_signal[start:end] += symbols[i] * sinc_base
         
-        # REMOVE DELAY 
-        #baseband_signal = baseband_signal[SPAN*L : SPAN*L + N*L]
+        return baseband_signal
+
+    elif METHOD == "RRC":
+        L = samples_per_symbol
+        SPAN = 6       # filter span (in symbols)
+        beta = 0.25    # roll-off factor
+        
+        N = len(symbols)
+        
+        # Time axis
+        t = np.arange(-SPAN*L, SPAN*L + 1) / L
+        
+        # RRC pulse
+        rrc = np.zeros_like(t)
+        
+        for i in range(len(t)):
+            ti = t[i]
+            
+            if ti == 0.0:
+                rrc[i] = 1.0 - beta + (4 * beta / np.pi)
+            
+            elif abs(ti) == 1 / (4 * beta):
+                rrc[i] = (beta / np.sqrt(2)) * (
+                    (1 + 2/np.pi) * np.sin(np.pi / (4 * beta)) +
+                    (1 - 2/np.pi) * np.cos(np.pi / (4 * beta))
+                )
+            
+            else:
+                numerator = (
+                    np.sin(np.pi * ti * (1 - beta)) +
+                    4 * beta * ti * np.cos(np.pi * ti * (1 + beta))
+                )
+                
+                denominator = (
+                    np.pi * ti * (1 - (4 * beta * ti)**2)
+                )
+                
+                rrc[i] = numerator / denominator
+        
+        # Normalize energy
+        rrc = rrc / np.sqrt(np.sum(rrc**2))
+        
+        # Create buffer
+        baseband_signal = np.zeros((N + 2*SPAN) * L, dtype=complex)
+        
+        # Convolve symbols with RRC pulse (same style as your sinc)
+        for i in range(N):
+            center = (i + SPAN) * L
+            start = center - len(rrc)//2
+            end   = start + len(rrc)
+            
+            baseband_signal[start:end] += symbols[i] * rrc
         
         return baseband_signal
-        
-        
-
-
 
 def upconvert_to_passband(baseband_signal, fs, carrier_freq):
     """Modulate complex baseband samples onto a real passband carrier."""
