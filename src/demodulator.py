@@ -162,9 +162,9 @@ def locate_pilot_start(sync_start_idx, sync_length, fs, gap_seconds=0.05):
     return sync_start_idx + sync_length + gap_samples
 
 
-def slice_pilot_samples(rx_baseband, pilot_start_idx, num_pilot_symbols, samples_per_symbol):
+def slice_pilot_samples(rx_baseband, pilot_start_idx, num_pilot_symbols, samples_per_symbol, span_symbols=4):
     """Slice received baseband samples covering the known pilot symbols."""
-    num_samples = (num_pilot_symbols +4)* samples_per_symbol
+    num_samples = (num_pilot_symbols + span_symbols) * samples_per_symbol
     return rx_baseband[pilot_start_idx:pilot_start_idx + num_samples]   
 
 def downsample_from_offset(rx_baseband, start, samples_per_symbol):
