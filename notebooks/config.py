@@ -10,7 +10,7 @@ SYMBOL_RATE = 6300  # Symbols per second (Baud)
 SAMPLES_PER_SYMBOL = FS // SYMBOL_RATE
 
 M=4 #M value for M qam, Mpam etc
-total_symbols=1000
+total_symbols=50000
 
 #zadoff chu
 len_zadoff_chu = 353
@@ -21,7 +21,7 @@ pulse_method="SINC" # "SQUARE" or "SINC"
 modulation_method="QAM" # "QAM" or "PAM"
 
 #do i want to read or write to the message.txt file, true to read 
-flag=True
+flag= False
 
 #gap between zadoff and pilots
 SYNC_GAP_SECONDS=0
