@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.io import wavfile
-from scipy.signal import butter, fftconvolve, filtfilt
+from scipy.signal import butter, fftconvolve, filtfilt, firwin
 
 
 def load_mono_normalized_audio(filepath):
@@ -30,8 +30,10 @@ def lowpass_filter(signal, fs, cutoff_hz, order=5):
     """Apply a zero-phase Butterworth low-pass filter."""
     nyq = 0.5 * fs
     normal_cutoff = cutoff_hz / nyq
-    b, a = butter(order, normal_cutoff, btype="low", analog=False)
-    return filtfilt(b, a, signal)
+    # Use FIR filter with 101 taps for good frequency response
+    numtaps = 101
+    b = firwin(numtaps, normal_cutoff)
+    return filtfilt(b, 1, signal)
 
 
 def estimate_baseband_bandwidth(symbol_rate, pulse_method="SINC", rolloff=0.0, margin=1.0):
