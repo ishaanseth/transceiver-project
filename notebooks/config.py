@@ -1,7 +1,8 @@
 import numpy as np
-FS = 44100            # Sample rate (Hz)
-F_CARRIER = 12000  
-SYMBOL_RATE = 2000  # Symbols per second (Baud)
+
+FS = 44100  # Sample rate (Hz)
+F_CARRIER = 12000
+SYMBOL_RATE = 6300  # Symbols per second (Baud)
 
 # Calculate how many audio samples represent one symbol
 # 44100 Hz / 8820 Baud = 5 samples per symbol
@@ -9,27 +10,29 @@ SYMBOL_RATE = 2000  # Symbols per second (Baud)
 # 44100 Hz / 6300 Baud = 7 samples per symbol
 SAMPLES_PER_SYMBOL = FS // SYMBOL_RATE
 
-M=4 #M value for M qam, Mpam etc
-total_symbols=10000
+M = 2  # M value for M qam, Mpam etc
+total_symbols = 50000
 
-#zadoff chu
+# zadoff chu
 len_zadoff_chu = 839
 u_zadoff_chu = 7
 
-#METHODS
-pulse_method="RRC" # "SQUARE" or "SINC" or "RRC"
-modulation_method="QAM" # "QAM", "PAM", or "BPSK"
+# METHODS
+pulse_method = "RRC"  # "SQUARE" or "SINC" or "RRC"
+modulation_method = "BPSK"  # "QAM", "PAM", or "BPSK"
 
-#do i want to read or write to the message.txt file, true to read 
-flag= False
+# do i want to read or write to the message.txt file, true to read
+flag = False
 
-#gap between zadoff and pilots
-SYNC_GAP_SECONDS=0
+# gap between zadoff and pilots
+SYNC_GAP_SECONDS = 0
 
-#SPAN for the sinc symbols 
-SPAN=4
+# SPAN for the sinc symbols
+SPAN = 4
 
 NUM_PILOTS_symbols = 16
 
 bit_string = "1001001001101000110101010010011111011000001110111010010111111001"
-pilot_bits = np.array([int(b) for b in bit_string])[:NUM_PILOTS_symbols*2]  # Take only the required number of bits for pilots
+pilot_bits = np.array([int(b) for b in bit_string])[
+    : NUM_PILOTS_symbols * 2
+]  # Take only the required number of bits for pilots

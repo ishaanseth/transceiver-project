@@ -7,8 +7,8 @@
 # In[1]:
 
 
-get_ipython().run_line_magic('load_ext', 'autoreload')
-get_ipython().run_line_magic('autoreload', '2')
+# get_ipython().run_line_magic('load_ext', 'autoreload')
+# get_ipython().run_line_magic('autoreload', '2')
 
 import os
 import sys
@@ -20,7 +20,7 @@ from scipy.io import wavfile
 # Add src folder to the path
 sys.path.append(os.path.abspath('../src'))
 
-from data_utils import load_bitstream, apply_error_correction
+
 from modulator import (
     apply_tukey_window,
     map_bits_to_symbols,
@@ -89,8 +89,8 @@ else:
         f.write("".join(map(str, message_bits)))
 
 message_bits_h = hamming74_encode(message_bits)
-qam_symbols = map_bits_to_symbols(message_bits_h, M, METHOD=config.modulation_method)
-print(f"Generated {len(qam_symbols)} complex symbols for {M}-{config.modulation_method}.")
+qam_symbols = map_bits_to_symbols(message_bits_h, M, METHOD='BPSK')
+print(f"Generated {len(qam_symbols)} complex symbols for {M}-{'BPSK'}.")
 decode_bits = hamming74_decode(message_bits_h)
 print(f"Decoded bits match original: {np.array_equal(message_bits, decode_bits)}")
 
@@ -108,7 +108,7 @@ sync_audio = generate_zadoff_chu_audio(len_zadoff_chu, u_zadoff_chu)
 
 
 pilot_bits = config.pilot_bits
-pilot_symbols = map_bits_to_symbols(pilot_bits, M, METHOD=config.modulation_method)
+pilot_symbols = map_bits_to_symbols(pilot_bits, M, METHOD='BPSK')
 baseband_symbols = np.concatenate((pilot_symbols, qam_symbols))
 
 print(pilot_symbols)
@@ -122,7 +122,7 @@ print("Used ",config.pulse_method," for pulse shapping")
 
 
 plot_complex_parts(pilot_symbols, title_prefix="pilot_symbols")
-plt.show()
+# plt.show()
 
 
 # In[6]:
@@ -144,7 +144,7 @@ baseband_transmission = assemble_baseband_frame(
 
 
 plot_complex_parts(pilot_signal, title_prefix="pilot_signal")
-plt.show()
+# plt.show()
 
 
 # # Passband Modulation and WAV Export
@@ -165,7 +165,7 @@ wavfile.write(output_path, FS, transmission_signal_16bit)
 print(f"Saved transmission file to: {output_path}")
 
 plot_waveform(passband_signal, title="Time Domain: Passband Signal")
-plt.show()
+# plt.show()
 
 
 # # Quick Checks
@@ -179,7 +179,7 @@ plt.show()
 corr = np.correlate(passband_signal, sync_audio, mode="full")
 plt.figure(figsize=(20, 4))
 plt.plot(abs(corr))
-plt.show()
+# plt.show()
 print(np.argmax(corr))
 
 
@@ -189,7 +189,7 @@ print(np.argmax(corr))
 sample_rate, data = wavfile.read("../data/tx_single_carrier_test.wav")
 print("sample rate of the audio signal is ",sample_rate)
 plot_waveform(data, sample_rate=sample_rate, title="Waveform")
-plt.show()
+# plt.show()
 
 
 # In[11]:
@@ -197,7 +197,7 @@ plt.show()
 
 fs_read, audio_data = wavfile.read(output_path)
 plot_fft(audio_data, fs_read, title="FFT of passband audio file")
-plt.show()
+# plt.show()
 
 
 # In[12]:
@@ -205,7 +205,7 @@ plt.show()
 
 fig, ax = plot_fft(passband_signal, FS, title="FFT of passband")
 save_important_plot("fft_passband_signal", fig)
-plt.show()
+# plt.show()
 
 
 # In[13]:
@@ -213,6 +213,6 @@ plt.show()
 
 """ fig, ax = plot_fft(baseband_signal, FS, title="FFT of baseband")
 save_important_plot("fft_baseband_signal", fig)
-plt.show()
+# plt.show()
  """
 

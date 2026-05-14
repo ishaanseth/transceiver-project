@@ -219,3 +219,10 @@ def symbols_to_bits(symbols, M=4, METHOD="QAM"):
             bits_out.extend(i_bits + q_bits)
         
         return np.array(bits_out)
+        
+    elif METHOD == "BPSK":
+        symbols = np.asarray(symbols)
+        # BPSK: > 0 is 1, <= 0 is 0
+        bits_out = (np.real(symbols) > 0).astype(int)
+        return bits_out
+
