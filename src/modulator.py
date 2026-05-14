@@ -32,6 +32,12 @@ def map_bits_to_symbols(bit_array, M=4,METHOD="QAM"):
             symbols.append(complex(i_amp, q_amp) / norm_factor)
 
         return np.array(symbols)
+
+    elif METHOD == "BPSK":
+        """Maps an array of bits to BPSK complex symbols."""
+        bit_array = np.asarray(bit_array, dtype=int)
+        symbols = 2 * bit_array - 1
+        return np.array(symbols, dtype=complex)
     #else PAM
 
 

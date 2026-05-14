@@ -9,7 +9,7 @@ SYMBOL_RATE = 6300  # Symbols per second (Baud)
 # 44100 Hz / 6300 Baud = 7 samples per symbol
 SAMPLES_PER_SYMBOL = FS // SYMBOL_RATE
 
-M=4 #M value for M qam, Mpam etc
+M=4 #M value for M qam, Mpam etc. Set M=2 for BPSK.
 total_symbols=50000
 
 #zadoff chu
@@ -18,7 +18,7 @@ u_zadoff_chu = 7
 
 #METHODS
 pulse_method="RRC" # "SQUARE" or "SINC" or "RRC"
-modulation_method="QAM" # "QAM" or "PAM"
+modulation_method="QAM" # "QAM", "PAM", or "BPSK"
 
 #do i want to read or write to the message.txt file, true to read 
 flag= False
