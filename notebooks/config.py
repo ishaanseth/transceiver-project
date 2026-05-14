@@ -1,7 +1,7 @@
 import numpy as np
 
 FS = 44100  # Sample rate (Hz)
-F_CARRIER = 12000
+F_CARRIER = 13000
 SYMBOL_RATE = 6300  # Symbols per second (Baud)
 
 # Calculate how many audio samples represent one symbol
@@ -20,6 +20,7 @@ u_zadoff_chu = 7
 # METHODS
 pulse_method = "RRC"  # "SQUARE" or "SINC" or "RRC"
 modulation_method = "BPSK"  # "QAM", "PAM", or "BPSK"
+Error_correction= "HAMM" # HAMM for hamming and LDPC
 
 # do i want to read or write to the message.txt file, true to read
 flag = False
